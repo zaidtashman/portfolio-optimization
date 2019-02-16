@@ -5,17 +5,15 @@ require(scatterplot3d)
 require(plotly)
 require(quadprog)
 
-s = read_excel('../../../Documents/bloomberg/symbol-02122019.xlsx')
+s = read_excel('data/symbol-02122019.xlsx')
 
-files = list.files(path="../../../Documents/bloomberg/ANR-02122019/")
-
-View(read_excel(paste('../../../Documents/bloomberg/ANR-02122019/', files[which(fdf$symbol == "ATVI US Equity")], sep = ''), col_names = FALSE))
+files = list.files(path="data/ANR-02122019/")
 
 fdf = data.frame(symbol=character(length(files)), mu=numeric(length(files)), sigma=numeric(length(files)), entropy=numeric(length(files)), position=numeric(length(files)), stringsAsFactors = F)
 
 for (i in 1:length(files)){
   
-  p = read_excel(paste('../../../Documents/bloomberg/ANR-02122019/', files[i], sep = ''), col_names = FALSE)
+  p = read_excel(paste('data/ANR-02122019/', files[i], sep = ''), col_names = FALSE)
   
   s = p[1,1]$X__1
   
@@ -48,9 +46,11 @@ for (i in 1:length(files)){
   }
 }
 
-write.csv(x = fdf, file = '../../bloomberg/anr.csv', row.names = F)
+View(read_excel(paste('data/ANR-02122019/', files[which(fdf$symbol == "ET US Equity")], sep = ''), col_names = FALSE))
 
-nsim=10000
+write.csv(x = fdf, file = 'anr.csv', row.names = F)
+
+nsim=100000
 simdf = data.frame(mu=numeric(nsim), sigma=numeric(nsim), entropy=numeric(nsim), stringsAsFactors = F)
 for (i in 1:nsim){
   w = rdirichlet(1, rep(abs(rcauchy(1)),length(files)))
@@ -60,7 +60,7 @@ for (i in 1:nsim){
   simdf[i,'entropy'] = sum(w*fdf$entropy)
 }
 
-ggplot(simdf, aes(x=mu,y=sigma,color=entropy))+geom_point()
+ggplot(simdf, aes(x=sigma,y=mu,color=entropy))+geom_point()
 ggplot(simdf, aes(x=mu,y=entropy,color=sigma))+geom_point()
 plot_ly(simdf, x = ~mu, y = ~sigma, z = ~entropy)
 
