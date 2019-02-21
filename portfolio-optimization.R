@@ -5,6 +5,18 @@ require(scatterplot3d)
 require(plotly)
 require(quadprog)
 
+parse_rank = function(rank){
+  num = substr(rank, 1, nchar(rank)-2)
+  return(as.numeric(num))
+}
+
+parse_cons = function(cons){
+  num = substr(cons, 1, nchar(cons)-1)
+  return(as.numeric(num)/100.0)
+}
+
+
+
 s = read_excel('data/symbol-02122019.xlsx')
 
 files = list.files(path="data/ANR-02122019/")
@@ -28,7 +40,7 @@ for (i in 1:length(files)){
   
   r = (as.numeric(df$tgt_px)-p_last)/p_last
   mu = mean(r, na.rm = TRUE)
-  qplot(r)
+  qplot(r)+geom_vline(xintercept = 0.0)
   
   sigma = var(r, na.rm = TRUE)
   
@@ -46,7 +58,7 @@ for (i in 1:length(files)){
   }
 }
 
-View(read_excel(paste('data/ANR-02122019/', files[which(fdf$symbol == "ET US Equity")], sep = ''), col_names = FALSE))
+View(read_excel(paste('data/ANR-02122019/', files[which(fdf$symbol == "AMRN US Equity")], sep = ''), col_names = FALSE))
 
 write.csv(x = fdf, file = 'anr.csv', row.names = F)
 
@@ -64,13 +76,18 @@ ggplot(simdf, aes(x=sigma,y=mu,color=entropy))+geom_point()
 ggplot(simdf, aes(x=mu,y=entropy,color=sigma))+geom_point()
 plot_ly(simdf, x = ~mu, y = ~sigma, z = ~entropy)
 
+
+
+
+
+
+
 # Get monthly return data from 2012 through 2013
 require(quantmod)
-myStocks <- c("AAPL","XOM","GOOG","MSFT","GE","JNJ","WMT","CVX","PG","WF")
+myStocks <- c("BOX")
 getSymbols(myStocks ,src='yahoo')
-returns.df <- lapply(myStocks, 
-                      function(s) periodReturn(eval(parse(text=s)),
-                                               period='monthly', subset='2012::2013'))
+returns.df <- lapply(myStocks, function(s) periodReturn(eval(parse(text=s)),period='daily'))
+
 # Plot monthly return data
 require(ggplot2)
 require(reshape2)
@@ -78,9 +95,11 @@ returns2 <- as.data.frame(returns.df)
 returns2$date <- row.names(returns2)
 returns2 <- melt(returns2, id="date")
 ggplot(returns2, aes(x=date,y=value, group=variable)) +
-  geom_line(aes(color=variable), lwd=1.5) +
-  ylab("Monthly Return")+ xlab("Date") +
+  geom_line(aes(color=variable)) +
+  ylab("Daily Return")+ xlab("Date") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(returns2, aes(x=value))+geom_histogram(binwidth = 0.005)
 
 # Compute the average returns and covariance matrix of the return series
 r <- matrix(colMeans(data.frame(returns.df)), nrow=1)
@@ -115,12 +134,4 @@ lp  <- OP(objective  =  fdf$mu,
                               group_constraint(djia2018, index = c(3, 17), dir = "==", rhs = 0.5)),
           maximum = T)
 #===========================================
-parse_rank = function(rank){
-  num = substr(rank, 1, nchar(rank)-2)
-  return(as.numeric(num))
-}
 
-parse_cons = function(cons){
-  num = substr(cons, 1, nchar(cons)-1)
-  return(as.numeric(num)/100.0)
-}

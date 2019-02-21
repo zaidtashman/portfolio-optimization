@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="sbt: com.lithium:lithium_2.11:0.2:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/local/com.lithium/lithium_2.11/0.2/jars/lithium_2.11.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.ivy2/local/com.lithium/lithium_2.11/0.2/docs/lithium_2.11-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/local/com.lithium/lithium_2.11/0.2/srcs/lithium_2.11-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
