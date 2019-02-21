@@ -1,0 +1,16 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.class
+*.log
+*.jar
+target
+*.iml
+*.ipr
+*.iws
+.idea
+out
+.DS_Store
+
+
