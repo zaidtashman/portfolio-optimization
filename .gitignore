@@ -9,8 +9,8 @@ volatility/target
 *.iml
 *.ipr
 *.iws
-.idea
-out
+volatility/.idea
+volatility/out
 .DS_Store
 
 
