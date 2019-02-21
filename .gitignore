@@ -4,3 +4,13 @@
 .Ruserdata
 *.class
 *.log
+*.jar
+volatility/target
+*.iml
+*.ipr
+*.iws
+.idea
+out
+.DS_Store
+
+
