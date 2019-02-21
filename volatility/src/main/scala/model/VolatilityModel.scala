@@ -38,7 +38,7 @@ object VolatilityModel {
 
     val histData: RDD[(String, immutable.IndexedSeq[Double])] = raw.rdd.map({ case (_, _, _, _, symbol, _, _, _) =>
       val period = 5
-      val res = Http("https://api.tdameritrade.com/v1/marketdata/" + symbol + "/pricehistory?apikey=OFWNX9PJR40H&periodType=year&period=" + period + "&frequencyType=daily&frequency=1").asString
+      val res = Http("https://api.tdameritrade.com/v1/marketdata/" + symbol + "/pricehistory?apikey=OFWNX9PJR###&periodType=year&period=" + period + "&frequencyType=daily&frequency=1").asString
       println(symbol + " " + res.body)
       Thread.sleep(1000)
       val obj = parse(res.body)
